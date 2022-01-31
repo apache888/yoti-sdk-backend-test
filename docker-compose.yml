@@ -22,10 +22,14 @@ services:
     container_name: hoover-app
     build:
       context: .
+    environment:
+      - datasource_host=hoover-db:5432
+      - datasource_username=hoover
+      - datasource_password=hoover
     depends_on:
       - hoover-db
     ports:
-      - "10500:10500"
+      - "8080:8080"
     networks:
       - hoover-network
 

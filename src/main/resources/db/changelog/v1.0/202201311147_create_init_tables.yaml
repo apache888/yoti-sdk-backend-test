@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 202201311147_init
+      id: 202201311147_create_clean_instructions_tab
       author: Roman_Haida
       preConditions:
         - onFail: MARK_RAN
@@ -41,7 +41,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 202201311155_init
+      id: 202201311155_create_clean_results_tab
       author: Roman_Haida
       preConditions:
         - onFail: MARK_RAN

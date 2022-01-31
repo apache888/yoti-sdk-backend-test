@@ -1,5 +1,8 @@
 server:
-  port: 10500
+  port: 8080
+
+database:
+  schema: public
 
 spring:
   application:
@@ -11,9 +14,9 @@ spring:
   datasource:
     platform: postgresql
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/hoover
-    username: postgres
-    password: postgres
+    url: TBD
+    username: TBD
+    password: TBD
   jpa:
     database: postgresql
     show-sql: true
@@ -22,15 +25,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: public
+        default_schema: ${database.schema}
         format_sql: true
 
   liquibase:
     enabled: true
-    default-schema: public
-    liquibase-schema: public
-
-
-logging:
-  level:
-    root: info
+    default-schema: ${database.schema}
+    liquibase-schema: ${database.schema}

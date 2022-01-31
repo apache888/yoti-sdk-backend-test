@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/oscar83
+    username: postgres
+    password: postgres
+
+logging:
+  level:
+    root: debug
