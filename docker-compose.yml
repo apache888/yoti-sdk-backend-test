@@ -23,9 +23,9 @@ services:
     build:
       context: .
     environment:
-      - datasource_host=hoover-db:5432
-      - datasource_username=hoover
-      - datasource_password=hoover
+      - DATASOURCE_HOST=hoover-db:5432
+      - DATASOURCE_USERNAME=hoover
+      - DATASOURCE_PASSWORD=hoover
     depends_on:
       - hoover-db
     ports:
