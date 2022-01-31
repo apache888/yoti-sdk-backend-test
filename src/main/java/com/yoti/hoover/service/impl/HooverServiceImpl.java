@@ -38,6 +38,7 @@ public class HooverServiceImpl implements HooverService {
     @Override
     public CleaningResultDto clean(CleaningInstructionsDto instructionsDto) {
 
+        /*verify incoming data*/
         if (!verifyIncomingInstructions(instructionsDto)) {
             throw new CoordinatesOutOfRoomDimensionException("Coordinates of hoover or patches are out of room dimension");
         }
@@ -54,7 +55,7 @@ public class HooverServiceImpl implements HooverService {
         instructionsDto.getCoords().toArray(hooverCoords);
 
         /*get sequence of directions*/
-        final List<Directions> directions = getDirections(instructionsDto);
+        final List<Directions> directions = getDirections(instructionsDto.getInstructions());
 
         /*get patches DTO*/
         final List<PatchDto> patches = instructionsDto.getPatches().stream()
@@ -86,42 +87,38 @@ public class HooverServiceImpl implements HooverService {
                 newY = hooverCoords[1] + 1;
                 if (newY <= roomSizeY) {
                     hooverCoords[1] = newY;
-                    if (isPatchCleaned(hooverCoords, patches)) {
-                        cleanedPatches = cleanedPatches + 1;
-                    }
                 }
                 break;
             case S:
                 newY = hooverCoords[1] - 1;
                 if (newY >= 0) {
                     hooverCoords[1] = newY;
-                    if (isPatchCleaned(hooverCoords, patches)) {
-                        cleanedPatches = cleanedPatches + 1;
-                    }
                 }
                 break;
             case W:
                 newX = hooverCoords[0] - 1;
                 if (newX >= 0) {
                     hooverCoords[0] = newX;
-                    if (isPatchCleaned(hooverCoords, patches)) {
-                        cleanedPatches = cleanedPatches + 1;
-                    }
                 }
                 break;
             case E:
                 newX = hooverCoords[0] + 1;
                 if (newX <= roomSizeX) {
                     hooverCoords[0] = newX;
-                    if (isPatchCleaned(hooverCoords, patches)) {
-                        cleanedPatches = cleanedPatches + 1;
-                    }
                 }
                 break;
+        }
+        if (isPatchCleaned(hooverCoords, patches)) {
+            cleanedPatches = cleanedPatches + 1;
         }
         return cleanedPatches;
     }
 
+    /**
+     * Checks whether hoover intersects with any patch and marks patch as cleaned in case intersection
+     * We should mark patch as cleaned due to hover can intersect patch coords several times,
+     * after first intersection patch should be disappeared
+     */
     private boolean isPatchCleaned(Integer[] hooverCoords, List<PatchDto> patches) {
         AtomicBoolean result = new AtomicBoolean(false);
         patches.forEach(patch -> {
@@ -135,8 +132,8 @@ public class HooverServiceImpl implements HooverService {
         return result.get();
     }
 
-    private List<Directions> getDirections(CleaningInstructionsDto instructionsDto) {
-        final char[] directionsArray = instructionsDto.getInstructions().toUpperCase().toCharArray();
+    private List<Directions> getDirections(String instructions) {
+        final char[] directionsArray = instructions.toUpperCase().toCharArray();
         final List<Directions> directions = new LinkedList<>();
         for (char symbol : directionsArray) {
             directions.add(Directions.valueOf(String.valueOf(symbol)));
@@ -148,12 +145,15 @@ public class HooverServiceImpl implements HooverService {
         int roomSizeX = instructionsDto.getRoomSize().get(0);
         int roomSizeY = instructionsDto.getRoomSize().get(1);
 
+        /*check hoover coords*/
         if (instructionsDto.getCoords().get(0) > roomSizeX
                 || instructionsDto.getCoords().get(0) < 0
                 || instructionsDto.getCoords().get(1) > roomSizeY
                 || instructionsDto.getCoords().get(1) < 0) {
             return false;
         }
+
+        /*check patches coords*/
         for (List<Integer> patch : instructionsDto.getPatches()) {
             if (patch.get(0) > roomSizeX || patch.get(0) < 0
                     || patch.get(1) > roomSizeY || patch.get(1) < 0) {
