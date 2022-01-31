@@ -1,0 +1,36 @@
+server:
+  port: 10500
+
+spring:
+  application:
+    name: hoover-service
+
+  jackson:
+    default-property-inclusion: non_null
+
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/hoover
+    username: postgres
+    password: postgres
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        format_sql: true
+
+  liquibase:
+    enabled: true
+    default-schema: public
+    liquibase-schema: public
+
+
+logging:
+  level:
+    root: info

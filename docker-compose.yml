@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  hoover-db:
+    hostname: hoover-db
+    image: postgres:13.5-alpine
+    container_name: hoover-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "hoover"
+      POSTGRES_USER: "hoover"
+      POSTGRES_PASSWORD: "hoover"
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./volumes/pg-data:/var/lib/postgresql/data
+    networks:
+      - hoover-network
+
+  hoover-app:
+    hostname: hoover-app
+    image: "hoover-app"
+    container_name: hoover-app
+    build:
+      context: .
+    depends_on:
+      - hoover-db
+    ports:
+      - "10500:10500"
+    networks:
+      - hoover-network
+
+networks:
+  hoover-network:

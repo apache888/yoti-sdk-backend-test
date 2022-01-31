@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202201311147_init
+      author: Roman_Haida
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: clean_instructions
+      changes:
+        - createTable:
+            tableName: clean_instructions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: clean_instructions_pk
+                  autoIncrement: true
+              - column:
+                  name: room_size
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: coords
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patches
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: instructions
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 202201311155_init
+      author: Roman_Haida
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: clean_results
+      changes:
+        - createTable:
+            tableName: clean_results
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: clean_results_pk
+                  autoIncrement: true
+              - column:
+                  name: coords
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patches
+                  type: int
+                  constraints:
+                    nullable: false
