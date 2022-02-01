@@ -40,7 +40,7 @@ public class HooverServiceImpl implements HooverService {
 
         /*verify incoming data*/
         if (!verifyIncomingInstructions(instructionsDto)) {
-            throw new CoordinatesOutOfRoomDimensionException("Coordinates of hoover or patches are out of room dimension");
+            throw new CoordinatesOutOfRoomDimensionException(COORDINATES_OF_HOOVER_OR_PATCHES_ARE_OUT_OF_ROOM_DIMENSION);
         }
 
         /*save incoming instructions into DB*/
