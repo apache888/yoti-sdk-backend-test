@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -27,7 +28,8 @@ public class CleaningInstructionsDto {
      * 2d element - MAX coordinate Y
      */
     @ApiModelProperty(value = "Room size", required = true)
-    @Size(min = 2, max = 2)
+    @NotNull(message = "Room size can't be NULL")
+    @Size(min = 2, max = 2, message = "Room size must be strongly two numbers, [x,y]")
     private List<Integer> roomSize;
 
     /**
@@ -35,7 +37,8 @@ public class CleaningInstructionsDto {
      * 2d element - coordinate Y
      */
     @ApiModelProperty(value = "Coordinates of hoover", required = true, position = 1)
-    @Size(min = 2, max = 2)
+    @NotNull(message = "Hoover coords can't be NULL")
+    @Size(min = 2, max = 2, message = "Hoover coords must be strongly two numbers, [x,y]")
     private List<Integer> coords;
 
     /**
@@ -44,10 +47,12 @@ public class CleaningInstructionsDto {
      * 2d element - coordinate Y
      */
     @ApiModelProperty(value = "Coordinates of patches", required = true, position = 2)
+//    @NotNull //TODO: requires more business details
+//    @Size(min = 1)
     private List<List<Integer>> patches;
 
     @ApiModelProperty(value = "Instructions about moving directions", required = true, position = 3)
-    @NotBlank
-    @Pattern(regexp = "^[NSWEnswe]*$")
+    @NotBlank(message = "Instructions can't be empty")
+    @Pattern(regexp = "^[NSWEnswe]*$", message = "Wrong direction. Must be only 'N' 'S' 'W' 'E'")
     private String instructions;
 }

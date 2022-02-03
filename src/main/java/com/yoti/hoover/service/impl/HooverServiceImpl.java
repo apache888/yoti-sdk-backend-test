@@ -39,16 +39,14 @@ public class HooverServiceImpl implements HooverService {
     public CleaningResultDto clean(CleaningInstructionsDto instructionsDto) {
 
         /*verify incoming data*/
-        if (!verifyIncomingInstructions(instructionsDto)) {
-            throw new CoordinatesOutOfRoomDimensionException(COORDINATES_OF_HOOVER_OR_PATCHES_ARE_OUT_OF_ROOM_DIMENSION);
-        }
+        verifyIncomingInstructions(instructionsDto);
 
         /*save incoming instructions into DB*/
         cleaningInstructionsRepository.save(mapper.map(instructionsDto, CleaningInstructionsModel.class));
 
-        /*get room dimension*/
-        int roomSizeX = instructionsDto.getRoomSize().get(0);
-        int roomSizeY = instructionsDto.getRoomSize().get(1);
+        /*get room dimension counting [0,0] as initial coords*/
+        int roomSizeX = instructionsDto.getRoomSize().get(0) - 1;
+        int roomSizeY = instructionsDto.getRoomSize().get(1) - 1;
 
         /*get initial coords of hoover*/
         Integer[] hooverCoords = new Integer[2];
@@ -141,25 +139,27 @@ public class HooverServiceImpl implements HooverService {
         return directions;
     }
 
-    private boolean verifyIncomingInstructions(CleaningInstructionsDto instructionsDto) {
-        int roomSizeX = instructionsDto.getRoomSize().get(0);
-        int roomSizeY = instructionsDto.getRoomSize().get(1);
+    private void verifyIncomingInstructions(CleaningInstructionsDto instructionsDto) {
+        int roomSizeX = instructionsDto.getRoomSize().get(0) - 1;
+        int roomSizeY = instructionsDto.getRoomSize().get(1) - 1;
 
         /*check hoover coords*/
         if (instructionsDto.getCoords().get(0) > roomSizeX
                 || instructionsDto.getCoords().get(0) < 0
                 || instructionsDto.getCoords().get(1) > roomSizeY
                 || instructionsDto.getCoords().get(1) < 0) {
-            return false;
+            throw new CoordinatesOutOfRoomDimensionException(COORDINATES_OF_HOOVER_ARE_OUT_OF_ROOM_DIMENSION);
         }
 
         /*check patches coords*/
+        if (instructionsDto.getPatches().stream().anyMatch(patch -> patch.size() != 2)) {
+            throw new IllegalArgumentException("Patch must have strongly two numbers of coords");
+        }
         for (List<Integer> patch : instructionsDto.getPatches()) {
             if (patch.get(0) > roomSizeX || patch.get(0) < 0
                     || patch.get(1) > roomSizeY || patch.get(1) < 0) {
-                return false;
+                throw new CoordinatesOutOfRoomDimensionException(COORDINATES_OF_PATCHES_ARE_OUT_OF_ROOM_DIMENSION);
             }
         }
-        return true;
     }
 }

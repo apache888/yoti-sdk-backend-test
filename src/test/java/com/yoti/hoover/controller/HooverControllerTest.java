@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.yoti.hoover.service.HooverService.COORDINATES_OF_HOOVER_OR_PATCHES_ARE_OUT_OF_ROOM_DIMENSION;
+import static com.yoti.hoover.service.HooverService.COORDINATES_OF_HOOVER_ARE_OUT_OF_ROOM_DIMENSION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -56,7 +56,7 @@ class HooverControllerTest {
         final CleaningInstructionsDto instructionsDto = TestHooverFactory.createCleaningInstructionsDto();
 
         when(hooverService.clean(any(CleaningInstructionsDto.class)))
-                .thenThrow(new CoordinatesOutOfRoomDimensionException(COORDINATES_OF_HOOVER_OR_PATCHES_ARE_OUT_OF_ROOM_DIMENSION));
+                .thenThrow(new CoordinatesOutOfRoomDimensionException(COORDINATES_OF_HOOVER_ARE_OUT_OF_ROOM_DIMENSION));
 
         mvc.perform(MockMvcRequestBuilders.post("/hoover/clean")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +64,7 @@ class HooverControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.error").value(COORDINATES_OF_HOOVER_OR_PATCHES_ARE_OUT_OF_ROOM_DIMENSION));
+                .andExpect(jsonPath("$.error").value(COORDINATES_OF_HOOVER_ARE_OUT_OF_ROOM_DIMENSION));
     }
 
     @Test
