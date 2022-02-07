@@ -1,4 +1,4 @@
-package com.yoti.hoover.config;
+package com.yoti.hoover.mapper;
 
 import com.yoti.hoover.controller.dto.CleaningInstructionsDto;
 import com.yoti.hoover.controller.dto.CleaningResultDto;
@@ -11,13 +11,13 @@ import ma.glasnost.orika.impl.ConfigurableMapper;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * MapperConfig. Configures MapperFacade for object mapping
+ * CustomHooverMapper. Configures MapperFacade for object mapping
  *
  * @author Roman_Haida
  * 31/01/2022
  */
 @Configuration
-public class MapperConfig extends ConfigurableMapper {
+public class CustomHooverMapper extends ConfigurableMapper {
 
     @Override
     protected void configure(MapperFactory factory) {
